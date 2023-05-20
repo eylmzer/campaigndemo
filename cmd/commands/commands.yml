@@ -1,0 +1,46 @@
+- name: create_product
+  args:
+    - P1
+    - "100"
+    - "1000"
+- name: create_order
+  args:
+    - P1
+    - "5"
+- name: create_campaign
+  args:
+    - C1
+    - P1
+    - "5"
+    - "20"
+    - "100"
+- name: get_product_info
+  args:
+    - P1
+- name: increase_time
+  args:
+    - "1"
+- name: get_product_info
+  args:
+    - P1
+- name: increase_time
+  args:
+    - "1"
+- name: get_product_info
+  args:
+    - P1
+- name: increase_time
+  args:
+    - "1"
+- name: get_product_info
+  args:
+    - P1
+- name: increase_time
+  args:
+    - "2"
+- name: get_product_info
+  args:
+    - P1
+- name: get_campaign_info
+  args:
+    - C1
