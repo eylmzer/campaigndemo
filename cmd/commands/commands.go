@@ -108,7 +108,7 @@ func ExecuteCommand(cmds string, cs *campaingscenario.CampaingScenario) (string,
 			return "", errors.New("campaign not found")
 		}
 		return fmt.Sprintf("Campaign %s info; Status %s, Target Sales %d, Total Sales %d, Turnover %.2f, Average Item Price %.2f",
-			campaignName, campaign.Status(), campaign.TargetSales, campaign.CurrentSales, campaign.CalculateTurnover(), campaign.CalculateAverageItemPrice()), nil
+			campaignName, campaign.Status(campaign.StartTime), campaign.TargetSales, campaign.CurrentSales, campaign.CalculateTurnover(), campaign.CalculateAverageItemPrice()), nil
 
 	default:
 		return "", errors.New("invalid command")

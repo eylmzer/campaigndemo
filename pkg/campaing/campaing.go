@@ -16,6 +16,7 @@ type Campaign struct {
 	TotalSales   int
 	StartTime    time.Time
 	EndTime      time.Time
+	CurrentTime  time.Time
 	CurrentSales int
 }
 
@@ -30,7 +31,7 @@ func NewCampaign(name string, product *product.Product, duration int, priceLimit
 		return nil, errors.New("invalid target sales")
 	}
 
-	startTime := time.Now()
+	startTime := time.Now().Truncate(24 * time.Hour)
 	endTime := startTime.Add(time.Hour * time.Duration(duration))
 
 	campaign := &Campaign{
@@ -40,14 +41,15 @@ func NewCampaign(name string, product *product.Product, duration int, priceLimit
 		PriceLimit:  priceLimit,
 		TargetSales: targetSales,
 		StartTime:   startTime,
+		CurrentTime: startTime,
 		EndTime:     endTime,
 	}
 
 	return campaign, nil
 }
 
-func (c *Campaign) Status() string {
-	currentTime := time.Now()
+func (c *Campaign) Status(t time.Time) string {
+	currentTime := t
 	if currentTime.Before(c.StartTime) {
 		return "Not Started"
 	} else if currentTime.After(c.EndTime) {
@@ -58,12 +60,14 @@ func (c *Campaign) Status() string {
 }
 
 func (c *Campaign) CalculateProductPrice(hours int, price float64) float64 {
-	status := c.Status()
+
+	c.CurrentTime = c.CurrentTime.Add(time.Hour * time.Duration(hours))
+	timeElapsedHours := int(c.CurrentTime.Sub(c.StartTime).Hours())
+
+	status := c.Status(c.CurrentTime)
 	if status == "Not Started" || status == "Ended" {
 		return price
 	}
-
-	timeElapsedHours := int(c.StartTime.Add(time.Duration(hours)).Hour())
 
 	priceChangePercentage := (float64(timeElapsedHours) / float64(c.Duration)) * c.PriceLimit
 	priceChange := (priceChangePercentage / 100) * price
